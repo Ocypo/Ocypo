@@ -13,7 +13,8 @@ class Lang
   
   public static function setLocale($language)
   {
-    if(!file_exists('./language/'.$language)) ERROR::generate(404, "Locale folder not found!");
+    if(!file_exists('./language/'.$language))
+      ERROR::generate(404, "Locale folder not found!");
     else
     {
       $time = 60 * 60 * 24 * 31; # Session time
@@ -61,11 +62,14 @@ class Lang
         {
           return include($inc);
         }
-        else ERROR::generate(404, "Language file does not exist.");
+        else
+          ERROR::generate(404, "Language file does not exist.");
       }
-      else ERROR::generate(404, "Could not find folder/file.");
+      else
+        ERROR::generate(404, "Could not find folder/file.");
     }
-    else ERROR::generate(400, "Locale not set.");
+    else
+      ERROR::generate(400, "Locale not set.");
     return false;
   }
   
@@ -83,7 +87,8 @@ class Lang
       }
       return implode('', $expl);
     }
-    else return $str;
+    else
+      return $str;
   }
   
   public static function get($str, $args = array())
@@ -120,7 +125,8 @@ class Lang
           
           return $return;
         }
-        else return $str;
+        else
+          return $str;
       }
     }
   }

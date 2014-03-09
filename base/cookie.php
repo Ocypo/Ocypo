@@ -25,16 +25,16 @@ class COOKIE
     return $cookie;
   }
 
-  private static function encrypt($string)
+  private static function encrypt($str)
   {
-    $data = base64_encode($string);
-    $data = str_replace(array('+','/','='),array('-','_',''),$data);
+    $data = base64_encode($str);
+    $data = str_replace(array('+','/','='), array('-','_',''), $data);
     return $data;
   }
 
-  private static function decrypt($string)
+  private static function decrypt($str)
   {
-    $data = str_replace(array('-','_'),array('+','/'),$string);
+    $data = str_replace(array('-','_'), array('+','/'), $str);
     $mod4 = strlen($data) % 4;
     if ($mod4) {
       $data .= substr('====', $mod4);

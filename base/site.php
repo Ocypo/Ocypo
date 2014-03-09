@@ -30,7 +30,8 @@ class SITE
       $url = $to;
     else
     {
-      if(substr($to, 0, 1) == "/") $to = substr($to, 1);
+      if(substr($to, 0, 1) == "/")
+        $to = substr($to, 1);
       $url = BASE.$to;
     }
     header('Location: '.$url);

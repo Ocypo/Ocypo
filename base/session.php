@@ -14,12 +14,15 @@ class SESSION
 
   public static function get($name = false)
   {
-    if($name === false) return $_SESSION;
-    else return $_SESSION[$name];
+    if($name === false)
+      return $_SESSION;
+    else
+      return $_SESSION[$name];
   }
 
   public static function remove($name)
   {
-    if($_SESSION[$name]) unset($_SESSION[$name]);
+    if($_SESSION[$name])
+      unset($_SESSION[$name]);
   }
 }
