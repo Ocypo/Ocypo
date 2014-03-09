@@ -5,6 +5,11 @@ class test
   {
     #Do something when the class has been called.
   }
+
+  public function index()
+  {
+    echo "Passing arguments to view.";
+  }
   
   public function testFunc($arg)
   {
@@ -13,14 +18,9 @@ class test
     $value = 'value';
     
     #Prepare the variables you want to pass to the view
-    $arr = array('name'=>$value, 'arg'=>$arg);
+    $arr = array('name'=>$value, 'arguments'=>$arg);
     
     #Load the view. VIEW::add(VIEW_NAME, ARGS);
     VIEW::add('json', $arr);
-  }
-
-  public function error()
-  {
-    echo "test";
   }
 }
