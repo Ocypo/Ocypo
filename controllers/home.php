@@ -9,5 +9,33 @@ class home
     #Load the view. VIEW::add(VIEW_NAME, ARGS);
     VIEW::add('home', $args);
   }
+
+  public function href()
+  {
+    echo SITE::a('language', 'Go to language page.');
+    echo "<br />";
+    echo SITE::a('http://google.com', 'Open Google in a new page', array('target'=>'_blank'));
+  }
+
+  public function image()
+  {
+    echo SITE::img('logo.png');
+    echo SITE::img('logo.png', 'img', array('style'=>'width: 64px;'));
+  }
+
+  public function redirect()
+  {
+    SITE::redirect("home/url");
+  }
+
+  public function url()
+  {
+    echo SITE::generateURL("home");
+  }
+
+  public function asset()
+  {
+    echo htmlentities( SITE::asset("style.css") );
+  }
 }
 ?>
