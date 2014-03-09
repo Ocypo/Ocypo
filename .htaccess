@@ -1,0 +1,26 @@
+IndexIgnore .htaccess */.??* *~ *# */HEADER* */README* */_vti*
+Options -Indexes
+
+<Limit GET POST>
+order deny,allow
+deny from all
+allow from all
+</Limit>
+
+<Limit PUT DELETE>
+order deny,allow
+deny from all
+</Limit>
+
+<IfModule mod_rewrite.c>
+  Options -MultiViews
+  RewriteEngine On
+
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteRule ^ index.php [L]
+
+  RewriteCond %{REQUEST_URI} !^/assets/ [NC]
+  RewriteCond %{REQUEST_FILENAME} !index.php
+  RewriteRule ^(.*)\.php$ $1 [L,NC]
+</IfModule>
