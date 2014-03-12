@@ -11,7 +11,7 @@ $routes = array(
 #config
 $config = array(
   'debug' => false, #Don't use on live version!
-  'shiftFunc' => true, #If func doesn't exist use index($func) instead.
+  'shiftFunc' => false, #If func doesn't exist use index($func) instead. <boolean> true for all controllers OR <array> controllers. E.Q. array('controller1', 'controller2');
 );
 
 #defaults
@@ -24,5 +24,5 @@ VIEW::UpdateGlobals(array(
 
 ERROR::$log = true;
 ERROR::$debug = false;
-ERROR::$exclude = array(E_NOTICE, E_STRICT, E_DEPRECATED); #E_NOTICE, E_STRICT
+ERROR::$exclude = array(); //E_NOTICE, E_STRICT, E_DEPRECATED); #E_NOTICE, E_STRICT #Look at http://www.php.net/manual/en/errorfunc.constants.php for constants.
 ?>
