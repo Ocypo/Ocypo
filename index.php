@@ -19,7 +19,7 @@ ob_start();
 include('./config.php');
 
 /**** SEND SERVER INFO ****/
-//if($config['debug'] !== true) sendDebugInformation();
+//if($config['debug'] !== false) sendDebugInformation();
 /**** CONTINUE CONFIG ****/
 
 $uri      = SITE::getURI();

@@ -24,5 +24,5 @@ VIEW::UpdateGlobals(array(
 
 ERROR::$log = true;
 ERROR::$debug = false;
-ERROR::$exclude = array(); //E_NOTICE, E_STRICT, E_DEPRECATED); #E_NOTICE, E_STRICT #Look at http://www.php.net/manual/en/errorfunc.constants.php for constants.
+ERROR::$exclude = array(); #E_NOTICE, E_STRICT, E_DEPRECATED #Look at http://www.php.net/manual/en/errorfunc.constants.php for constants.
 ?>
