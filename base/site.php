@@ -44,7 +44,7 @@ class SITE
                       '|up\.browser|[1-4][0-9]{2}x[1-4][0-9]{2})\b#i', $_SERVER['HTTP_USER_AGENT'] );
   }
 
-  public static function opendir( $dir, $filter = array(), $r = false)
+  public static function openDir( $dir, $filter = array(), $r = false)
   {
     $return = array();
     if(file_exists($dir) and $handle = opendir($dir))

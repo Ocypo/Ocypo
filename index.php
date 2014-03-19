@@ -62,7 +62,7 @@ if($class != "" and file_exists('./controllers/'.$class.'.php'))
     call_user_func_array(array($$class, $function), $args);
   elseif(method_exists($$class, 'index') and ($config['shiftFunc'] === true or (is_array($config['shiftFunc']) and in_array($class, $config['shiftFunc']))))
   {
-    array_unshift($args, $function);
+    array_unshift($args, str_replace('_', '-', $function));
     call_user_func_array(array($$class, 'index'), $args);
   }
   else
