@@ -63,19 +63,13 @@ class SITE
 
   public static function addDir( $dir, $recursion = true)
   {
-    if($files = self::opendir( $dir, array(), true))
-    {
-      foreach($files as $file)
-      {
-        if(is_dir($dir.'/'.$file) and file_exists($dir.'/'.$file.'/index.php'))
-          include($dir.'/'.$file.'/index.php');
-        else
-          include($dir.'/'.$file);
-      }
-      return true;
-    }
-    else
-      return false;
+    foreach(glob($dir."/*.php") as $file)
+      include($file);
+
+    if($recursion === true)
+      foreach(glob($dir."/*", GLOB_ONLYDIR) as $folder)
+        if(file_exists($folder.'/index.php'))
+          include($folder.'/index.php');
   }
 
   public static function asset($link, $ext = '')
