@@ -46,13 +46,14 @@ class SITE
 
   public static function openDir( $dir, $filter = array(), $r = false)
   {
+    $ignore = array('.', '..', '.DS_Store', 'Thumbs.db','.gitignore');
     $return = array();
     if(file_exists($dir) and $handle = opendir($dir))
     {
       while (false !== ($entry = readdir($handle)))
       {
         $ext = explode(".", $entry);
-        if(count($ext) > 1 and count($filter) > 0 and in_array($ext[1], $filter))
+        if((count($ext) > 1 and count($filter) > 0 and in_array($ext[1], $filter)) or (count($filter) == 0 and !in_array($entry, $ignore)))
           $return[] = $entry;
       }
       closedir($handle);
@@ -60,13 +61,17 @@ class SITE
     return ($r === true) ? $return : false;
   }
 
-  public static function addDir( $dir, $filter = array('php'))
+  public static function addDir( $dir, $recursion = true)
   {
-    if($files = self::opendir( $dir, $filter, true))
+    if($files = self::opendir( $dir, array(), true))
     {
       foreach($files as $file)
-        include($dir.'/'.$file);
-
+      {
+        if(is_dir($dir.'/'.$file) and file_exists($dir.'/'.$file.'/index.php'))
+          include($dir.'/'.$file.'/index.php');
+        else
+          include($dir.'/'.$file);
+      }
       return true;
     }
     else
