@@ -260,6 +260,7 @@ if($fileLocation)
 {
   //$fileLocation = $errorTrace[0]['file'];
   $file = file($fileLocation);
+  //$totalLines = count($file);
   echo '<div id="code">';
   echo '<div id="head">';
   echo '<p>File:</p>';
@@ -269,7 +270,7 @@ if($fileLocation)
   $from = $fileLine - 7;
   $to   = $fileLine + 3;
 
-  $totalLines = count($file);
+  if($from < 1) $from = 1;
   for($i=$from; $i<$to; $i++)
   {
     $class = '';
