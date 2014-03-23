@@ -2,16 +2,8 @@
 define('BASE', 'http://'.$_SERVER['SERVER_NAME'].substr($_SERVER["SCRIPT_NAME"], 0, -9));
 define('VERSION', '8.1');
 
-if($handle = opendir('./base'))
-{
-  while (false !== ($entry = readdir($handle)))
-  {
-    $ext = explode(".", $entry);
-    if($ext[1] == "php")
-      include('./base/'.$entry);
-  }
-}
-closedir($handle);
+foreach(glob("./base/*.php") as $file)
+  include($file);
 
 session_start();
 ob_start();

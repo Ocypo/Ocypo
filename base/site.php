@@ -6,7 +6,7 @@ class SITE
    * redirect(<string> controller/view)
    * isMobile(void)
    * opendir(<string> path to open[, <array> only open files in array[, <bool> return list]])
-   * addDir(<string> path to open[, <array> only open files in array])
+   * addDir(<string> path to open[, <bool> also open sub directories?])
    * asset(<string> link or path to file[, <string> custom extension])
    * img(<string> link or path to file[, <string> image location path[, <array> args]])
    * createThumbnail(<string> path to image, <string> name of image [, <string> thumbnail prefix])
