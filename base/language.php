@@ -77,8 +77,7 @@ class Lang
         ERROR::generate(404, "Could not find folder/file.");
     }
     else
-      dd(self::$lang);
-    //  ERROR::generate(400, "(Default) Locale not set.");
+      ERROR::generate(400, "(Default) Locale not set.");
     return false;
   }
   
