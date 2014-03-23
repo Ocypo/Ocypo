@@ -22,6 +22,8 @@ VIEW::UpdateGlobals(array(
   'useControllerIfEmpty' => true,
   ));
 
+LANG::setDefault('en'); #Set default language to English.
+
 ERROR::$log = true;
 ERROR::$debug = false;
 ERROR::$exclude = array(); #E_NOTICE, E_STRICT, E_DEPRECATED #Look at http://www.php.net/manual/en/errorfunc.constants.php for constants.

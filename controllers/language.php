@@ -7,7 +7,7 @@ class language
     echo "Make sure you have created a language folder!";
   }
 
-  public function setLang($lang = 'en')
+  public function setLang($lang = false)
   {
     if($lang) LANG::setLocale($lang);
 
