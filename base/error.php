@@ -23,9 +23,9 @@ abstract class error
       self::errorHandler(E_CORE_ERROR, $error["message"], $error["file"], $error["line"]);
   }
 
-  public static function log($log)
+  public static function log($log, $i = 0)
   {
-    error_log($log, 0);
+    error_log($log, $i);
   }
 
   public static function errorHandler($errno, $errstr, $errfile, $errline)
@@ -78,7 +78,7 @@ abstract class error
     else
     {
       $log = 'Error: '.$errstr.'. File: '.$errfile.' on line: '.$errline.'.';
-      error_log($log, 0);
+      self::log($log);
     }
 
     // Don't execute PHP internal error handler
@@ -92,7 +92,7 @@ abstract class error
     if(self::$debug)$log .= "\n".$exception->getTraceAsString();
     $log .= "\r\n";
     if(self::$log === true and ini_get('log_errors'))
-      error_log($log, 0);
+      self::log($log, 0);
 
     $errorTrace = $exception->getTrace();
 ?>
