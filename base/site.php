@@ -14,16 +14,6 @@ class SITE
    * getURI()
    */
 
-  public static function generateURL($controller)
-  {
-    $url = $controller;
-    if($view != "")
-      $url .= '/'. $view;
-    if($view != "" and $args != "")
-      $url .= '/'. $args;
-    return BASE.$url;
-  }
-
   public static function redirect($to)
   {
     if(substr($to, 0, 7) == "http://" || substr($to, 0, 8) == "https://")
@@ -75,7 +65,7 @@ class SITE
   public static function asset($link, $ext = '')
   {
     $exp = explode('.', $link);
-    $ext = (empty($ext)) ? $exp[count($exp)-1] : $ext;
+    $ext = (empty($ext)) ? $exp[end($exp)] : $ext;
 
     $extToType = array(
                   'js'  => '<script type="text/javascript" src=";;"></script>',
@@ -153,10 +143,5 @@ class SITE
       array_shift($url);
 
     return $url;
-  }
-
-  public static function error($code = 404, $text = "")
-  {
-    throw new \ErrorException('Error deprecated function "error"', 1);
   }
 }
