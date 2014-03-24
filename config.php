@@ -1,7 +1,7 @@
 <?php
 if(!defined('BASE')) die("Nope.avi");
 
-#DATABASE::add( HOSTNAME, array(DB_HOST, DB_USER, DB_PASS, DB_NAME [, DB_PORT]));
+#DATABASE::add( DATABASENAME, array(DB_HOST, DB_USER, DB_PASS, DB_NAME [, DB_PORT]));
 
 #routes = array( FROM => TO, ...);
 $routes = array(

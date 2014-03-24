@@ -65,7 +65,7 @@ class SITE
   public static function asset($link, $ext = '')
   {
     $exp = explode('.', $link);
-    $ext = (empty($ext)) ? $exp[end($exp)] : $ext;
+    $ext = (empty($ext)) ? end($exp) : $ext;
 
     $extToType = array(
                   'js'  => '<script type="text/javascript" src=";;"></script>',

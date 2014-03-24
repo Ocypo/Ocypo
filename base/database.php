@@ -40,9 +40,9 @@ abstract class database
     {
       //ERROR::log("Added new database: $var");
       $db = self::$db[$var];
-      $database = new mysqli($db[0], $db[1], $db[2], $db[3], (isset($db[4])) ? $db[4] : 3306);
+      @$database = new mysqli($db[0], $db[1], $db[2], $db[3], (isset($db[4])) ? $db[4] : 3306);
       if($database->connect_error)
-        ERROR::generate(0, $var.' Connect Error ('. $database->connect_errno .') '. $database->connect_error );
+        ERROR::generate(0, "Database '".$var."' Error (". $database->connect_errno .")<br /> ". $database->connect_error );
       else
         self::$called[$var] = $database;
     }
