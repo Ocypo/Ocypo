@@ -20,11 +20,12 @@ class VIEW
   public static function add($view, $args = array())
   {
     $view = @str_replace('.', '/', $view);
+    $path = substr($_SERVER['SCRIPT_FILENAME'], 0, -9).'views/'.$view.'.php'; #very strange fix to get the proper path..
 
-    if(file_exists('./views/'.$view.'.php'))
+    if(file_exists($path))
     {
       foreach($args as $k => $v) $$k = $v;
-      include('./views/'.$view.'.php');
+      include($path);
     }
     else
     {
