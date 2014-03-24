@@ -100,6 +100,8 @@ abstract class error
 <html>
 <head>
   <title>Whoops! We've found an error...</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta name="copyright" content="NielsMeijer.eu" />
 </head>
 <body>
 <style type="text/css">
@@ -330,7 +332,7 @@ exit();
   <head>
     <title>ERROR</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <meta name="copyright" content="Easy Networking Solutions Ltd" />
+    <meta name="copyright" content="NielsMeijer.eu" />
 <style type="text/css">
 * {
   margin: 0;
@@ -380,7 +382,7 @@ p {
   <body>
     <div id="container">
 <?php if($code > 0) echo '<h1>ERROR '.$code.'</h1><p>'.$cmess[$code].'</p>'; ?>
-      <h2><?=$text;?></h2>
+      <h2><?php echo $text; ?></h2>
     </div>
   <div id="footer">
     All rights reserved | <a href="http://nielsmeijer.eu">NielsMeijer</a>
