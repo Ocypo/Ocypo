@@ -6,6 +6,7 @@ abstract class database
 {
   /**
    * debug(void)
+   * get(<string> $databasename) return database object
    * addDB(<string> $name, <array> $connectDetails)
    * query(<string> $query)
    * fetch_all(<string> $query[, <bool> return first entry only[, <bool> print query]])
@@ -27,15 +28,17 @@ abstract class database
     else echo print_r(self::$called, true);
   }
 
-  private static function get()
+  public static function get($get = false)
   {
-    $calledClass = get_called_class();
-    $var = strtoupper($calledClass);
+    $var = get_called_class();
+    if($get !== false)
+      $var = $get;
+    $var = strtoupper($var);
 
     if($var == "DATABASE")
       ERROR::generate(0, "You can't run a query on the database class!" );
     elseif(!isset(self::$db[$var]))
-      ERROR::generate(0, "Database $var has not been setup properly!" );
+      ERROR::generate(0, "Database '$var' could not be located.<br />Has it been setup properly?" );
     elseif(!isset(self::$called[$var]))
     {
       //ERROR::log("Added new database: $var");

@@ -2,10 +2,12 @@
 if(!defined('BASE')) die("Nope.avi");
 
 #DATABASE::add( DATABASENAME, array(DB_HOST, DB_USER, DB_PASS, DB_NAME [, DB_PORT]));
+#NOTE: DATABASENAME should be capital case!
 
 #routes = array( FROM => TO, ...);
 $routes = array(
   '' => 'home',
+  'lang' => 'language',
 );
 
 #config
