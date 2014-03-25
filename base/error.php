@@ -293,7 +293,11 @@ if($fileLocation)
 /* request data */
 echo '<div id="data"><h3>Server/Request Data</h3><table>';
 $even = false;
-$data = array_merge($_GET, $_POST, $_SERVER);
+$_CUSTOM = array(
+  'MEMORY_USAGE' => (memory_get_peak_usage(true) /1024 ).' KB',
+  'EXECUTION_TIME' => (round((microtime(true) - TIME) * 1000, 2)).' MS',
+  );
+$data = array_merge($_CUSTOM, $_GET, $_POST, $_SERVER);
 foreach($data as $type => $value)
 {
   if(is_array($value))$value = implode(', ', $value);

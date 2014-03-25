@@ -1,6 +1,7 @@
 <?php
 define('BASE', 'http://'.$_SERVER['SERVER_NAME'].substr($_SERVER["SCRIPT_NAME"], 0, -9));
 define('VERSION', '8.1');
+define('TIME', microtime(true));
 
 foreach(glob("./base/*.php") as $file)
   include($file);
