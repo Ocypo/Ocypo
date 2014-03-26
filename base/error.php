@@ -14,7 +14,6 @@ abstract class error
    */
 
   public static $log = true;
-  public static $debug = false;
   public static $customPages = false;
   public static $exclude = array();
 
@@ -26,7 +25,8 @@ abstract class error
 
   public static function log($log, $i = 0)
   {
-    error_log($log, $i);
+    if(self::$log === true and ini_get('log_errors'))
+      error_log($log, $i);
   }
 
   public static function errorHandler($errno, $errstr, $errfile, $errline)
@@ -78,7 +78,7 @@ abstract class error
     }
     else
     {
-      $log = 'Error: '.$errstr.'. File: '.$errfile.' on line: '.$errline.'.';
+      $log = '1Error: '.$errstr.'. File: '.$errfile.' on line: '.$errline.'.';
       self::log($log);
     }
 
@@ -90,10 +90,9 @@ abstract class error
   {
     if(ob_get_contents()) ob_end_clean();
     $log = 'Error: '.$exception->getMessage().'. File: '.$exception->getFile().' on line: '.$exception->getLine().'.';
-    if(self::$debug)$log .= "\n".$exception->getTraceAsString();
+    $log .= "\n".$exception->getTraceAsString();
     $log .= "\r\n";
-    if(self::$log === true and ini_get('log_errors'))
-      self::log($log, 0);
+    self::log($log);
 
     $errorTrace = $exception->getTrace();
 ?>
