@@ -27,6 +27,7 @@ VIEW::UpdateGlobals(array(
 LANG::setDefault('en'); #Set default language to English.
 
 ERROR::$log = true;
+ERROR::$customPages = false #Replace with controller name, functions are the error codes, eg, 'function __404($errorMessage){ echo "Custom 404 page"; }'.
 ERROR::$debug = false;
 ERROR::$exclude = array(); #E_NOTICE, E_STRICT, E_DEPRECATED #Look at http://www.php.net/manual/en/errorfunc.constants.php for constants.
 ?>

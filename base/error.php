@@ -15,6 +15,7 @@ abstract class error
 
   public static $log = true;
   public static $debug = false;
+  public static $customPages = false;
   public static $exclude = array();
 
   public static function fatalHandler()
@@ -229,18 +230,17 @@ table {
   <ul id="trace">
     <h3>Error Exception Trace</h3>
 <?php
-$first = array_shift($errorTrace);
 $fileLocation = $exception->getFile();
 $fileLine = $exception->getLine();
+$first = array_shift($errorTrace);
 if(!isset($first["args"][2]))
 {
   $fileLocation = $first["file"];
-  $fileLine = $first["line"];
 }
-echo "<li>";
-  echo 'File: '.$fileLocation.' ('.$first["line"].')<br/>';
-  echo '<b>'.$first["args"][1].'</b>';
-echo "</li>";
+  echo "<li>";
+    echo 'File: '.$fileLocation.' ('.$fileLine.')<br/>';
+    echo '<b>'.$first["args"][1].'</b>';
+  echo "</li>";
 
 foreach($errorTrace as $trace)
 {
@@ -318,6 +318,14 @@ exit();
   {
     if(ob_get_contents()) ob_end_clean();
     $code = (is_integer($code)) ? $code : 404;
+
+    #Check if a custom error page has been set
+    if(self::$customPages !== false and method_exists(self::$customPages, '__'.$code))
+    {
+      call_user_func(array(self::$customPages, '__'.$code), $text);
+    }
+    else
+    {
     $cmess = array(
       '300'=>'Multiple Choices',
       '301'=>'Moved Permanently',
@@ -394,6 +402,7 @@ p {
   </body>
 </html>
     <?php
-exit();
+    }
+  exit();
   }
 }

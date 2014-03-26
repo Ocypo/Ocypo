@@ -42,10 +42,9 @@ if($class != "" and file_exists('./controllers/'.$class.'.php'))
   Lang::getLocale();
 
   include('./controllers/'.$class.'.php');
-  $private = array('__construct', '__destruct');
   $$class = new $class();
   $function = str_replace('-', '_', $function);
-  if(empty($function) or in_array($function, $private))
+  if(empty($function) or substr($function, 0, 2) == '__')
     $function = 'index';
 
   define('__FUNCTION', $function);
