@@ -3,19 +3,14 @@ class VIEW
 {
   /**
    * add(<string> location, <array> arguments)
-   * setPageTitle(<string> title)
-   * useControllerIfEmpty(<bool>)
-   * appendPageTitle(<bool>)
-   * setPageTitleSeperator(<sting> seperator)
-   * getPageTitle( void )
-   * UpdateGlobals( <array> config )
+   * setTitle(<string> title) #overrides title
+   * getTitle( void )
    */
 
-  private static $baseTitle = "";
-  private static $pageTitle = "My Website!";
-  private static $appendPageTitle = true;
-  private static $pageTitleSeperator = " | ";
-  private static $useControllerIfEmpty = true;
+  public static $websiteName = "";
+  public static $displayFormat = 0;
+  public static $seperator = ' | ';
+
 
   public static function add($view, $args = array())
   {
@@ -34,65 +29,24 @@ class VIEW
   }
 
 #setters
-  public static function setPageTitle($title)
+  public static function setTitle($title)
   {
-    self::$pageTitle = $title;
-  }
-
-  public static function useControllerIfEmpty($bool)
-  {
-    if(is_bool($bool)) self::$useControllerIfEmpty = $bool;
-  }
-
-  public static function appendPageTitle($bool)
-  {
-    if(is_bool($bool)) self::$appendPageTitle = $bool;
-  }
-
-  public static function setPageTitleSeperator($str)
-  {
-    self::$pageTitleSeperator = $str;
+    self::$websiteName = $title;
+    self::$displayFormat = 1;
   }
 
 #getters
-  public static function getPageTitle()
+  public static function getTitle()
   {
-    $return = self::$baseTitle;
-    if(self::$appendPageTitle === true)
-    {
-      if(self::$useControllerIfEmpty === true)
-      {
-        $uri = SITE::getURI();
-        foreach($uri as $var)
-        {
-          $return .= self::$pageTitleSeperator . ucfirst($var);
-        }
-      }
-      elseif(self::$pageTitle != '')
-        $return .= self::$pageTitleSeperator . ucfirst(self::$pageTitle);
-    }
-    else
-    {
-      if(self::$useControllerIfEmpty === true)
-      {
-        $uri = SITE::getURI();
-        foreach($uri as $var)
-        {
-          $return = self::$pageTitleSeperator . ucfirst($var);
-        }
-      }
-      elseif(self::$pageTitle != '')
-        $return = ucfirst(self::$pageTitle);
-    }
-    return $return;
-  }
-
-  public static function UpdateGlobals($config)
-  {
-    foreach($config as $var => $val)
-    {
-      self::$$var = $val;
-    }
+    $return = '';
+    $a = array(self::$websiteName, ucfirst(__CLASS), ucfirst(__FUNCTION));
+    $dec = decbin(self::$displayFormat);
+    if(strlen($dec) > count($a)) die("No");
+    $bits = array_reverse(str_split($dec, 1));
+    for($i = 0; $i < count($bits); $i++)
+      if($bits[$i] == 1)
+        $return .= $a[$i].self::$seperator;
+    return substr($return, 0, -strlen(self::$seperator));
   }
 }
 ?>
