@@ -3,180 +3,87 @@ class Auth
 {
   /**
    * login(<string> Username, <string> Password )
-   * getUsername(void)
-   * getID(void)
-   * loggedin(void)
+   * getUser(void) returns current user object.
+   * loggedin(void) returns boolean
    * requireLogin(<mixed> List[, <string> callback URL])
-   * SetSession(<array> ClientDetails)
-   * GetSession(void)
+   * getSession(void)
    */
 
-  protected static $username = "Anonymous";
-  protected static $id = 0;
-  private static $isAdmin = false;
-  private static $adminId = 0;
-  
-  public static function login($user, $pass, $referal = "")
+  protected static $id = 0;                 #User ID
+  protected static $username = "Anonymous"; #Username
+  protected static $accessLevel = 0;        #User access level, eg. #0 = banned, #1 = user, #2 = editor, #3 = admin
+  protected static $salt = false;
+
+  public static function login($username, $password)
   {
     #Override this function with your login method.
-    self::$isAdmin = true;
-    self::$username = "Niels Meijer";
-    self::$id = 1;
-    $ClientDetails["id"] = 1;
-    $ClientDetails["firstname"] = 'Niels';
-    $ClientDetails["lastname"] = 'Meijer';
-    self::SetSession($ClientDetails);
-    if($referal) header('Location: '.$referal);
+    #Check user + password in database.
+    $id = 1;
+    $username = 'Niels Meijer';
+    $accessLevel = 3;
+    self::setUser($id, $username, $accessLevel);
   }
 
-  public static function getUsername()
-  {
-    return self::$username;
-  }
-
-  public static function getID()
-  {
-    return self::$id;
-  }
-  
   public static function logout()
   {
-    foreach($_COOKIE as $k => $v)
-      if($k != "PHPSESSID")
-        setcookie($k, "", time() + 1, '/');
-    session_destroy();
+    COOKIE::remove('user');
+    SESSION::remove('user');
   }
-  
-  public static function loggedin()
-  {
-    self::GetSession();
-    return (self::$id == 0 or self::$username == "Anonymous") ? false : true;
-  }
-  
-  public static function requireLogin($list = '*', $callback = 'user/login')
-  {
-    //throw new \ErrorException("Error deprecated function \"error\"", 1);
 
-    SESSION::set('referer', $_SERVER["REDIRECT_URL"]);
-    if(!self::loggedin())
-    {
-      $uri = site::getURI();
-      if(is_array($list))
-      {
-        foreach($list as $page)
-        {
-          if($uri['1'] == $page)
-          {
-            site::redirect($callback);
-          }
-        }
-      }
-      if(is_string($list))
-      {
-        if($list == "*")
-        {
-          site::redirect($callback);
-        }
-        else
-        {
-          if($uri['1'] == $list)
-          {
-            site::redirect($callback);
-          }
-        }
-      }
-    }
-    /*
-    $args = func_get_args();
-    #If no arguments are parsed, all pages require the user to be logged in.
-    if(count($args) == 0 and !self::loggedin())
-      VIEW::add('login', $args);
-    elseif(count($args) == 1 and $args[0] == '*' and !self::loggedin())
-      VIEW::add('login', $args);
+  public static function createHash($id, $username)
+  {
+    #possibility to add ip addr in hash by adding $_SERVER['REMOTE_ADDR']
+    if(self::$salt !== false)
+      return md5(self::$salt.$id.$username.self::$salt);
     else
+      return false;
+  }
+
+  public static function setSalt($salt)
+  {
+    if(preg_match('/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,30}$/', $salt))
+      self::$salt = $salt;
+    else
+      ERROR::generate(400, 'Salt not secure enough!');
+  }
+
+  protected static function setUser($id, $username, $accessLevel)
+  {
+    self::$id = $id;
+    self::$username = $username;
+    self::$accessLevel = $accessLevel;
+
+    $var = $id.':'.$username.':'.$accessLevel; #Uses default cookie encryption.
+    SESSION::set('user', $var); #Save data server side.
+    COOKIE::set('user', $var);  #Save data client side.
+  }
+
+  private static function getSession()
+  {
+    $user = COOKIE::get('user');
+    $userInfo = explode(':', $user);
+    #Right so now we need to check if the server and client data is the same
+    if(isset(SESSION::get('user'), $user) and SESSION::get('user') == $user)
     {
-      foreach($args as $func)
-        if($func == SITE::getURI(true)['function'] and !self::loggedin()) VIEW::add('login');
+      self::setUser($userInfo[0], $userInfo[1], $userInfo[2]);
+      return true;
     }
-    */
     return false;
   }
-  
-  public static function SetSession($ClientDetails)
+
+  public static function getUser()
   {
-    $id = $ClientDetails["id"];
-    $fname = $ClientDetails["firstname"];
-    $lname = $ClientDetails["lastname"];
-    
-    $time = 60 * 60 * 24; # Session time
-    $_SESSION['user'] = self::encrypt($id, $fname, $lname);
-    setcookie('user', self::encrypt($id, $fname, $lname), time() + $time, '/');
+    if(self::loggedin())
+      return (object) array('id'=>self::$id, 'username'=>self::$username, 'accessLevel'=>self::$accessLevel);
+    else
+      return false;
   }
-  
-  public static function GetSession()
+
+  public static function loggedin()
   {
-    if(isset($_SESSION['user']) && isset($_COOKIE['user']))
-    {
-      $result = self::decrypt($_SESSION['user']);
-      $result2 = self::decrypt($_COOKIE['user']);
-      if($result == $result2)
-        self::$username = $result["firstname"]." ".$result["lastname"];
-        self::$id = $result["id"];
-    }
-  }
-  
-  private static function encrypt($id, $fname, $lname)
-  {
-    $rand = rand(1, 10);
-    $u = randomHash(2 * $rand).($id * 4 * $rand).randomHash(3 * $rand).":".$rand;
-    $rand = rand(3, 8);
-    
-    $u .= ":".randomHash(strlen($lname));
-    $name = $fname.strrev($lname);
-    $f = randomHash($rand).substr($name, 0, 1).randomHash(3 * $rand).substr(strrev($name), 0, 1).randomHash(2 * $rand);
-    
-    $rest = str_split(substr($name, 1, strlen($name)-2));
-    $str = "";
-    $rev = "";
-    for($i = 0; $i < count($rest); $i++)
-    {
-      if($i%2)$str .= $rest[$i].randomHash($rand);
-      else $rev .= $rest[$i].randomHash($rand);
-    }
-    $f .= $str.strrev($rev).$i.":".$rand;
-    return $u.":".$f;
-  }
-  
-  private static function decrypt($str)
-  {
-    $pieces = explode(":", $str);
-    $result['id'] = substr(substr($pieces[0], $pieces[1]*2, strlen($pieces[0])), 0, -$pieces[1]*3)/($pieces[1]*4);
-    
-    $fname = substr($pieces[3], $pieces[4], 1);
-    $lname = substr($pieces[3], $pieces[4]*4+1, 1);
-    $rest = str_split(substr($pieces[3], $pieces[4]*6+2), $pieces[4]+1);
-    $str = "";
-    $rev = "";
-    
-    for($i = 0; $i < count($rest)-1; $i++)
-    {
-      $char = $rest[$i];
-      if($i >= floor($rest[count($rest)-1]/2))
-        $rev .= substr(strrev($char), 0, 1);
-      else $str .= substr($char, 0, 1);
-    }
-    $str = str_split($str.$rev);
-    $temp = "";
-    $c = count($str);
-    for($i = 0; $i < $c; $i++)
-    {
-      if($i%2)$temp .= array_shift($str);
-      else $temp .= array_pop($str);
-    }
-    
-    $lnamelen = strlen($pieces[2]);
-    $result['firstname'] = $fname.substr($temp, 0, $lnamelen-2);
-    $result['lastname']  = $lname.strrev(substr($temp, -$lnamelen+1));
-    return $result;
+    if(self::$id == 0 or self::$username == "Anonymous")
+      return self::getSession();
+    else
+      return true;
   }
 }
