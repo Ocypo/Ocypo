@@ -22,7 +22,7 @@ class SESSION
 
   public static function remove($name)
   {
-    if($_SESSION[$name])
+    if(isset($_SESSION[$name]))
       unset($_SESSION[$name]);
   }
 }

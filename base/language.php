@@ -9,13 +9,21 @@ class Lang
    * choice(<string> file.name[, <int> choice [, <array> args]])
    */
 
-  private static $lang = false;
+  private static $lang    = false;
+  private static $cookie  = false;
+  private static $default = false;
+
+  public static function folderExist($lang)
+  {
+    if(file_exists('./language/'.$lang))
+      return true;
+    else
+      ERROR::generate(404, "Locale not found!");
+  }
   
   public static function setLocale($language)
   {
-    if(!file_exists('./language/'.$language))
-      ERROR::generate(404, "Locale not found!");
-    else
+    if(self::folderExist($language))
     {
       $time = 60 * 60 * 24 * 31; # Session time
       COOKIE::set('lang', $language, $time);
@@ -26,22 +34,20 @@ class Lang
   public static function getLocale()
   {
     $lang = COOKIE::get('lang');
-    if($lang !== false)
+    if($lang !== false and file_exists('./language/'.$lang))
     {
-      if(file_exists('./language/'.$lang))
-      {
-        self::$lang = $lang;
-      }
+      self::$cookie = $lang;
+      self::$lang = $lang;
     }
-    return self::$lang;
+
+    if(!self::$lang and self::$default)
+      self::$lang = self::$default;
   }
 
   public static function setDefault($language)
   {
-    if(file_exists('./language/'.$language))
-      self::$lang = $language;
-    else
-      ERROR::generate(404, "Locale not found!");
+    if(self::folderExist($language))
+      self::$default = $language;
   }
 
   public static function getLangFiles()
@@ -60,6 +66,10 @@ class Lang
   
   private static function getLangFile($str)
   {
+    if(self::$lang === false and self::$cookie === false)
+      self::getLocale();
+
+
     if(self::$lang !== false)
     {
       $exp = explode('.', $str);

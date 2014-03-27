@@ -63,7 +63,7 @@ class Auth
     $user = COOKIE::get('user');
     $userInfo = explode(':', $user);
     #Right so now we need to check if the server and client data is the same
-    if(isset(SESSION::get('user'), $user) and SESSION::get('user') == $user)
+    if(SESSION::get('user') == $user)
     {
       self::setUser($userInfo[0], $userInfo[1], $userInfo[2]);
       return true;

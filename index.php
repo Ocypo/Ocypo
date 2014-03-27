@@ -38,9 +38,6 @@ if($class != "" and file_exists('./controllers/'.$class.'.php'))
   foreach($models as $model)
     include('./models/'.$model);
 
-  Auth::getSession();
-  Lang::getLocale();
-
   include('./controllers/'.$class.'.php');
   $$class = new $class();
   $function = str_replace('-', '_', $function);
