@@ -30,7 +30,7 @@ class home
 
   public function url()
   {
-    echo SITE::generateURL("home");
+    echo BASE . __CLASS . '/' . __FUNCTION;
   }
 
   public function asset()

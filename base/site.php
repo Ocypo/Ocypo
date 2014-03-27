@@ -2,7 +2,6 @@
 class SITE
 {
   /**
-   * generateURL(<string> controller/view)
    * redirect(<string> controller/view)
    * isMobile(void)
    * opendir(<string> path to open[, <array> only open files in array[, <bool> return list]])
