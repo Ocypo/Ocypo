@@ -28,7 +28,7 @@ class home
     SITE::redirect("home/url");
   }
 
-  public function url()
+  public function base_url()
   {
     echo BASE . __CLASS . '/' . __FUNCTION;
   }
@@ -36,6 +36,13 @@ class home
   public function asset()
   {
     echo htmlentities( SITE::asset("style.css") );
+  }
+
+  public function test()
+  {
+    self::base_url();
+    echo "<br />";
+    var_dump(input::get());
   }
 }
 ?>
