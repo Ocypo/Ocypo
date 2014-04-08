@@ -30,11 +30,17 @@ class Auth
     SESSION::remove('user');
   }
 
-  public static function createHash($id, $username)
+  public static function createHash($id, $username, $containsIP = false)
   {
-    #possibility to add ip addr in hash by adding $_SERVER['REMOTE_ADDR']
     if(self::$salt !== false)
-      return md5(self::$salt.$id.$username.self::$salt);
+    {
+      $hash  = self::$salt;
+      $hash .= $id.$username;
+      if($containsIP === true)
+        $hash .= $_SERVER['REMOTE_ADDR'];
+      $hash .= self::$salt;
+      return sha1($hash);
+    }
     else
       return false;
   }
