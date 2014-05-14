@@ -102,6 +102,8 @@ class Lang
         {
           $expl[$i] = $args[$expl[$i]];
         }
+        elseif($i % 2 != 0)
+          $expl[$i] .= ':';
       }
       return implode('', $expl);
     }
