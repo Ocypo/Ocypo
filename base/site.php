@@ -77,7 +77,7 @@ class SITE
     else
       $http = BASE.'assets/'.$ext.'/'.$link;
 
-    $link = str_replace(';;', $http, $extToType[$ext]);
+    $link = @str_replace(';;', $http, $extToType[$ext]);
     return $link;
   }
 
@@ -92,9 +92,13 @@ class SITE
         $path = substr($path, 0, -1);
       $http = BASE.'assets/'.$path.'/'.$link;
     }
-    
-    $exp = explode('.', $link);
-    $alt = $exp[count($exp)-2];
+
+    $alt = $link;
+    if(strpos($link, '.') !== false)
+    {
+      $exp = explode('.', $link);
+      $alt = $exp[count($exp)-2];
+    }
 
     $str = "";
     if(count($args)>0)

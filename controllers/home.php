@@ -42,6 +42,7 @@ class home
   {
     self::base_url();
     echo "<br />";
+    echo site::a(BASE."test/wtf?arg1=wut&arg2=wow", 'Route Example')."<br />";
     var_dump(input::get());
   }
 }

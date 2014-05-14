@@ -42,6 +42,7 @@ define('__CLASS', $class);
 #load external libaries.
 SITE::addDir('./libaries');
 
+#Execute the magic!
 if($class != "" and file_exists('./controllers/'.$class.'.php'))
 {  
   $models = SITE::openDir('./models', array('php'), true);
@@ -56,6 +57,7 @@ if($class != "" and file_exists('./controllers/'.$class.'.php'))
     call_user_func_array(array($$class, $function), $args);
   elseif(method_exists($$class, 'index') and ($config['shiftFunc'] === true or (is_array($config['shiftFunc']) and in_array($class, $config['shiftFunc']))))
   {
+    #Undo the function magic we applied earlier and push it back on the args stack!
     array_unshift($args, str_replace('_', '-', $function));
     call_user_func_array(array($$class, 'index'), $args);
   }

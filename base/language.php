@@ -114,7 +114,7 @@ class Lang
     if($lang = self::getLangFile($str))
     {
       $exp = explode('.', $str);
-      $return = self::replaceArgs($lang[$exp[1]], $args);
+      $return = @self::replaceArgs($lang[$exp[1]], $args);
       
       return (empty($return)) ? $exp[1] : $return;
     }
