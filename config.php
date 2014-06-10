@@ -19,12 +19,12 @@ $config = array(
 VIEW::$websiteName = 'My website!';
 VIEW::$displayFormat = 3;
 # 1 = website name only
-# 2 = class name only
-# 3 = website name + class name
+# 2 = controller name only
+# 3 = website name + controller name
 # 4 = function name only
 # 5 = website name + function name
-# 6 = class name + function name
-# 7 = website name + class name + function name
+# 6 = controller name + function name
+# 7 = website name + controller name + function name
 VIEW::$seperator = ' | ';
 
 #Language settings
