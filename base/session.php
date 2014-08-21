@@ -17,12 +17,12 @@ class SESSION
     if($name === false)
       return $_SESSION;
     else
-      return $_SESSION[$name];
+      return @$_SESSION[$name];
   }
 
   public static function remove($name)
   {
-    if(isset($_SESSION[$name]))
+    if(@isset($_SESSION[$name]))
       unset($_SESSION[$name]);
   }
 }

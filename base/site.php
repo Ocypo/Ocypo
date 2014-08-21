@@ -33,7 +33,7 @@ class SITE
                       '|up\.browser|[1-4][0-9]{2}x[1-4][0-9]{2})\b#i', $_SERVER['HTTP_USER_AGENT'] );
   }
 
-  public static function openDir( $dir, $filter = array(), $r = false)
+  public static function openDir( $dir, $filter = array(), $r = true)
   {
     $ignore = array('.', '..', '.DS_Store', 'Thumbs.db','.gitignore');
     $return = array();
@@ -68,7 +68,7 @@ class SITE
 
     $extToType = array(
                   'js'  => '<script type="text/javascript" src=";;"></script>',
-                  'css' => '<link rel="stylesheet" type="text/css" href=";;" />',
+                  'css' => '<link rel="stylesheet" type="text/css" href=";;" media="screen, projection" />',
                   'ico' => '<link rel="shortcut icon" href=";;" type="image/x-icon" />'
                   );
 

@@ -65,5 +65,5 @@ if($class != "" and file_exists('./controllers/'.$class.'.php'))
     ERROR::generate(404, 'Function doesn\'t exist!');
 }
 else
-  ERROR::generate(404, 'Class doesn\'t exist!');
+  ERROR::generate(404, 'Class "'.$class.'" doesn\'t exist!');
 ?>

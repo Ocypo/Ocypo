@@ -83,7 +83,7 @@ abstract class database
     }
   }
 
-  public static function getAI($tbl)
+  public static function getAI($tbl, $noerror = false)
   {
     if($result = self::query("SHOW TABLE STATUS LIKE '".$tbl."'"))
     {
@@ -91,7 +91,10 @@ abstract class database
       $result->free();
       
       if($ai = $row['Auto_increment']) return $ai;
-      else ERROR::generate(400, "No auto increment value found!");
+      elseif($noerror)
+        return 0;
+      else
+        ERROR::generate(400, "No auto increment value found!");
     }
   }
 
