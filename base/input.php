@@ -28,12 +28,14 @@ class INPUT
   public static function post($post = false)
   {
     $return = false;
-    if($post)
+    if($post and isset($_POST[$post]))
     {
-      $post = SANITIZE::string($_POST[$post]);
-      if(!empty($post)) $return = $post;
+      if(is_numeric($_POST[$post])) $return = (int) $_POST[$post];
+      if(is_string($_POST[$post]))
+        $post = SANITIZE::string($_POST[$post]);
+      if(!empty($post) && $return === false) $return = $post;
     }
-    else
+    elseif($post === false)
     {
       $post = $_POST;
       foreach($post as $key => $value)
