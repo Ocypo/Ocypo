@@ -1,6 +1,6 @@
 <?php
-if(!function_exists('mysqli_init') && !extension_loaded('mysqli'))
-  ERROR::generate(400, 'mysqli is not installed!!!');
+if(!extension_loaded('PDO'))
+  ERROR::generate(400, 'PDO is not installed!!!');
 
 abstract class database
 {
@@ -8,14 +8,12 @@ abstract class database
    * debug(void)
    * get(<string> $databasename) return database object
    * addDB(<string> $name, <array> $connectDetails)
-   * query(<string> $query)
-   * fetch_all(<string> $query[, <bool> return first entry only[, <bool> print query]])
-   * getAI(<string> $table)
-   * escape(<string> $value)
+   * fetch_all(<string> $query[, <bool> return first entry only])
    */
 
   private static $db = array();
   private static $called = array();
+  private static $replaceCount = 0;
 
   public static function debug()
   {
@@ -41,13 +39,15 @@ abstract class database
       ERROR::generate(0, "Database '$var' could not be located.<br />Has it been setup properly?" );
     elseif(!isset(self::$called[$var]))
     {
-      //ERROR::log("Added new database: $var");
+      //if debug then -> ERROR::log("Added new database: $var");
       $db = self::$db[$var];
-      @$database = new mysqli($db[0], $db[1], $db[2], $db[3], (isset($db[4])) ? $db[4] : 3306);
-      if($database->connect_error)
-        ERROR::generate(0, "Database '".$var."' Error (". $database->connect_errno .")<br /> ". $database->connect_error );
-      else
-        self::$called[$var] = $database;
+      try {
+        $engine = "mysql";
+        $dsn = $engine.':dbname='.$db[3].";host=".$db[0].";port=".((isset($db[4])) ? $db[4] : 3306); 
+        self::$called[$var] = new PDO($dsn, $db[1], $db[2]);
+      } catch (PDOException $e) {
+        ERROR::generate(0, "Database '".$var."' Error (". $e->getMessage .")");
+      }
     }
 
     return self::$called[$var];
@@ -55,52 +55,60 @@ abstract class database
 
   public static function add($name, $conn)
   {
+    $name = strtoupper($name);
     self::$db[$name] = $conn;
   }
 
-  public static function query($query, $die = false)
-  {
-    if($die === true) ERROR::generate(0, $query);
-    $db = self::get();
-    if($db) return $db->query($query);
-    else return ;
+  private static function queryReplaceCallback($matches) {
+    $return  = ":args".self::$replaceCount;
+    self::$replaceCount++;
+    return $return;
   }
 
-  public static function fetch_all($query, $return = true, $die = false)
+  public static function fetch_all() //$parms = array(), $returnOnlyFirstRow = false
   {
-    if($die === true) ERROR::generate(0, $query);
-    if($result = self::query($query))
-    {
-      $results = array();
-      if($result->num_rows > 0)
-      {
-        while ($row = $result->fetch_assoc()) $results[] = $row;
-      }
-      $result->free();
-      if(count($results)==0) return false;
-      elseif(count($results)==1 and $return === true) return $results[0];
-      else return $results;
+    $args = func_get_args();
+    $return = false;
+    $returnOnlyFirstRow = false;
+
+    if(count($args) < 1) {
+      throw new Exception("Not enough arguments", 1);
     }
-  }
 
-  public static function getAI($tbl, $noerror = false)
-  {
-    if($result = self::query("SHOW TABLE STATUS LIKE '".$tbl."'"))
+    self::$replaceCount = 0;
+    $query = array_shift($args);
+    $query = preg_replace_callback('/(\'|")?(%d|%s)(\'|")?/', 'self::queryReplaceCallback', $query); //Sprintf like replace all %s and %d.
+
+    if(count($args) == 0 && self::$replaceCount > 0) {
+      throw new Exception("Trying to bind non-existent parameter!", 1);
+    }
+
+    $st = self::get()->prepare( $query );
+    if(count($args) > self::$replaceCount) //We have additional arguments!
     {
-      $row = $result->fetch_array();
-      $result->free();
+      $stBind = array_slice($args, 0, self::$replaceCount);
+      $additionalArguments = array_slice($args, -self::$replaceCount, self::$replaceCount);
       
-      if($ai = $row['Auto_increment']) return $ai;
-      elseif($noerror)
-        return 0;
-      else
-        ERROR::generate(400, "No auto increment value found!");
+      if(count($additionalArguments) == 1 && $additionalArguments[0] === true)
+      {
+        $returnOnlyFirstRow = true;
+      }
     }
-  }
+    else
+      $stBind = $args; //Since there are no additional arguments, just pass the whole lot!
 
-  public static function escape($str)
-  {
-    $db = self::get();
-    return $db->real_escape_string($str);
+    foreach ($stBind as $key => $value) {
+      if($value == NULL) {
+        throw new Exception("Trying to bind empty parameter!", 1);
+      }
+
+      $st->bindValue(":args".$key, $value);
+    }
+    if($st->execute()) {
+      $return = $st->fetchAll(PDO::FETCH_CLASS);
+    }
+
+    if(count($return)==1 and $returnOnlyFirstRow === true) return $return[0];
+    else return $return;
   }
 }
