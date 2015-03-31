@@ -10,12 +10,12 @@ class COOKIE
   public static function set($name, $str, $duration = 86400, $encrypt = true)
   {
     if($encrypt === true) $str = self::encrypt($str);
-    setcookie($name, $str, time() + $duration, '/');
+    return setcookie($name, $str, time() + $duration, '/');
   }
 
   public static function remove($name)
   {
-    setcookie($name, null, -1, '/');
+    return setcookie($name, null, -1, '/');
   }
 
   public static function get($name, $decrypt = true)
