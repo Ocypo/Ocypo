@@ -8,7 +8,7 @@ abstract class database
    * debug(void)
    * get(<string> $databasename) return database object
    * addDB(<string> $name, <array> $connectDetails)
-   * fetch_all(<string> $query[, <bool> return first entry only])
+   * query(<string> $query[, <mixed> argument, ..., [, <bool> return first return row only]])
    */
 
   private static $db = array();
@@ -65,7 +65,7 @@ abstract class database
     return $return;
   }
 
-  public static function fetch_all() //$parms = array(), $returnOnlyFirstRow = false
+  public static function query() //$query = string, $parms = array(), $returnOnlyFirstRow = false
   {
     $args = func_get_args();
     $return = false;
@@ -78,7 +78,6 @@ abstract class database
     self::$replaceCount = 0;
     $query = array_shift($args);
     $query = preg_replace_callback('/(\'|")?(%d|%s)(\'|")?/', 'self::queryReplaceCallback', $query); //Sprintf like replace all %s and %d.
-
     if(count($args) == 0 && self::$replaceCount > 0) {
       throw new Exception("Trying to bind non-existent parameter!", 1);
     }
@@ -87,28 +86,41 @@ abstract class database
     if(count($args) > self::$replaceCount) //We have additional arguments!
     {
       $stBind = array_slice($args, 0, self::$replaceCount);
-      $additionalArguments = array_slice($args, -self::$replaceCount, self::$replaceCount);
+      $numberOfAdditionalArguments = count($args) - self::$replaceCount;
+      $additionalArguments = array_slice($args, -$numberOfAdditionalArguments, $numberOfAdditionalArguments);
       
-      if(count($additionalArguments) == 1 && $additionalArguments[0] === true)
-      {
+      if(count($additionalArguments) == 1 && $additionalArguments[0] === true) {
         $returnOnlyFirstRow = true;
       }
     }
     else
       $stBind = $args; //Since there are no additional arguments, just pass the whole lot!
 
-    foreach ($stBind as $key => $value) {
-      if($value == NULL) {
-        throw new Exception("Trying to bind empty parameter!", 1);
+    if(count($stBind) > 0) {
+      foreach ($stBind as $key => $value) {
+        if(!is_int($value) && $value == NULL) {
+          $value = (string) "";
+          //throw new Exception("Trying to bind empty parameter!", 1);
+        }
+
+        $st->bindValue(":args".$key, $value);
       }
-
-      $st->bindValue(":args".$key, $value);
     }
-    if($st->execute()) {
-      $return = $st->fetchAll(PDO::FETCH_CLASS);
+    
+    if(strstr(strtoupper($query), "INSERT")) {
+      $return = $st->execute();
     }
-
-    if(count($return)==1 and $returnOnlyFirstRow === true) return $return[0];
-    else return $return;
+    elseif(strstr(strtoupper($query), "UPDATE") || strstr(strtoupper($query), "DELETE")) {
+      $st->execute();
+      $return = ($st->rowCount() > 0) ? true : false;
+    } else {
+      if($st->execute()) {
+        $return = $st->fetchAll(PDO::FETCH_CLASS);
+        
+        if(count($return)==1 and $returnOnlyFirstRow === true) $return = $return[0];
+      }
+    }
+    //var_dump($st->errorInfo());
+    return $return;
   }
 }
