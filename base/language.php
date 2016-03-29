@@ -76,12 +76,12 @@ class Lang
       if(count($exp) == 2)
       {
         $inc = './language/'.self::$lang.'/'.$exp[0].'.php';
-        if(file_exists($inc))
+        if(file_exists($_SERVER['DOCUMENT_ROOT'].$inc))
         {
-          return include($inc);
+          return include($_SERVER['DOCUMENT_ROOT'].$inc);
         }
         else
-          ERROR::generate(404, "Language file does not exist.");
+          ERROR::generate(404, "Language file '".self::$lang."/".$exp[0]."' does not exist.");
       }
       else
         ERROR::generate(404, "Could not find folder/file.");

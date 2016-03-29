@@ -41,6 +41,12 @@ abstract class database
     {
       //if debug then -> ERROR::log("Added new database: $var");
       $db = self::$db[$var];
+      
+      //2 File types, name;host;port and url.
+      //MYSQL
+      //ODBC
+      //PGSQL
+      //SQLITE
       try {
         $engine = "mysql";
         $dsn = $engine.':dbname='.$db[3].";host=".$db[0].";port=".((isset($db[4])) ? $db[4] : 3306); 
@@ -63,6 +69,11 @@ abstract class database
     $return  = ":args".self::$replaceCount;
     self::$replaceCount++;
     return $return;
+  }
+  
+  public static function lastInsertId()
+  {
+    return self::get()->lastInsertId();
   }
 
   public static function query() //$query = string, $parms = array(), $returnOnlyFirstRow = false
