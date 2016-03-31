@@ -89,7 +89,7 @@ class SITE
     else {
       #Check if we need to obfuscate
       if(class_exists(CONFIG) && CONFIG::$obfuscateURLs) {
-        $http = BASE.'assets/obfuscated/'.self::encrypt($directory.'/'.$linkOrFilename);
+        $http = BASE.'assets/obfuscated/'.CRYPT::encode($directory.'/'.$linkOrFilename);
       }
       else {
         $http = BASE.'assets/'.$directory.'/'.$linkOrFilename;
@@ -98,36 +98,6 @@ class SITE
 
     $return = @str_replace(';;', $http, $extToType[$directory]);
     return $return;
-  }
-
-  public static function encrypt($str)
-  {
-    $data = base64_encode($str);
-    $data = str_replace(array('+','/','='), array('-','_','', '+'), $data);
-    $split = str_split($data, 5);
-    $split = array_reverse($split);
-    $data = implode("", $split);
-    return $data;
-  }
-
-  public static function decrypt($str)
-  {
-    $data = str_replace(array('-','_'), array('+','/'), $str);
-    $mod5 = strlen($data) % 5;
-    $end = "";
-    if ($mod5) {
-      $end = substr($data, 0, $mod5);
-      $data = substr($data, $mod5);
-    }
-    $split = str_split($data, 5);
-    $split = array_reverse($split);
-    $data = implode("", $split).$end;
-    
-    $mod4 = strlen($data) % 4;
-    if ($mod4) {
-      $data .= substr('====', $mod4);
-    }
-    return base64_decode($data);
   }
 
   public static function getContent($linkOrFilename, $directory = '')
@@ -154,7 +124,7 @@ class SITE
 
       #Check if we need to obfuscate
       if(class_exists(CONFIG) && CONFIG::$obfuscateURLs) {
-        $http = BASE.'assets/obfuscated/'.self::encrypt($path.'/'.$link);
+        $http = BASE.'assets/obfuscated/'.CRYPT::encode($path.'/'.$link);
       }
       else {
         $http = BASE.'assets/'.$path.'/'.$link;

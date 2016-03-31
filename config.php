@@ -39,6 +39,12 @@ CONFIG::$debug = false;
 # 7 = Crawlers only
 CONFIG::$forceSSL = 2;
 
+/*** CRYPT Settings ***/
+
+#Your encrypted data can only be decrypted if the decryptor has the salt. Do not share this with anybody!
+#Uncomment the line below and add a 52 character key to enable encrypting/decrypting.
+//CRYPT::setSalt("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
+
 /*** Title Settings ***/
 
 #Webapplication title.
