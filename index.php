@@ -49,7 +49,7 @@ SITE::addDir('./libraries');
 #Execute the magic!
 if(CONFIG::$obfuscateURLs && $class == "assets" && $function == "obfuscated")
 {
-  $asset = SITE::decrypt(current($args));
+  $asset = CRYPT::decode(current($args));
   $ext = strtolower(substr($asset, strrpos($asset, '.')+1));
   $file = 'assets/'.$asset;
 
