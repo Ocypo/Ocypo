@@ -11,3 +11,4 @@ It's main features are:
 -Custom cookie / session setters/getters
 -Sanitize functions
 -Generic site helper functions
+-Encode and Encrypt options
