@@ -3,10 +3,21 @@ class CONFIG
 {
   public  static $forceSSL         = 0;
   public  static $shiftFunc        = false;
-  public  static $debug            = false;
+  public  static $debug            = true;
   public  static $obfuscateURLs    = false;
   public  static $hotlinking       = true;
   private static $version          = "9.0";
+  public  static $stack            = array();
+
+  public static function checkPHPVersion()
+  {
+    $version = explode('.', PHP_VERSION);
+    define('PHP_VERSION_ID', ($version[0] * 10000 + $version[1] * 100 + $version[2]));
+
+    if (PHP_VERSION_ID < 50300) {
+      ERROR::GENERATE(0, "PHP outdated...</br>In order to use this framework you must at least run PHP 5.3.0!");
+    }
+  }
 
   public static function isSSL() {
     return (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') || $_SERVER['SERVER_PORT'] == 443;
@@ -61,8 +72,28 @@ class CONFIG
   {
     return self::$version;
   }
+
+  public static function debug()
+  {
+    self::$stack[] = func_get_args();
+  }
+
+  public static function showDebugStack()
+  {
+    if(CONFIG::$debug !== false) {
+      echo "/***** DEBUG STACK *****/";
+      echo "<br />";
+      foreach(CONFIG::$stack as $event) {
+        print_r($event);
+        echo "<br />";
+      }
+      echo "/*** END DEBUG STACK ***/";
+      CONFIG::$stack = array(); //Clear the stack!
+    }
+  }
 }
 
 #Set defines!
 define('BASE', config::getBase());
-define('VERSION', config::getVersion());
+define('OCYPO_BASE', config::getBase());
+define('OCYPO_VERSION', config::getVersion());

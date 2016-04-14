@@ -11,12 +11,8 @@ ob_start();
 
 include('./config.php');
 
-/**** Error Debugging ****/
-if(CONFIG::$debug !== false) {
-  //Unused!
-}
-
-/**** Check if SSL should be used ****/
+/**** Check if PHP > 5.3.0 and if SSL should be used ****/
+CONFIG::checkPHPVersion();
 CONFIG::checkSSL();
 
 $uri      = SITE::getURI();
