@@ -303,6 +303,7 @@ if($fileLocation)
 echo '<div id="data"><h3>Server/Request Data</h3><table>';
 $even = false;
 $_CUSTOM = array(
+  'OCYPO_BASE' => (class_exists("CONFIG") ? CONFIG::getBase() : "Unknown"),
   'OCYPO_VERSION' => 'v'.(class_exists("CONFIG") ? CONFIG::getVersion() : "Unknown"),
   'MEMORY_USAGE' => (memory_get_peak_usage(true) /1024 ).' KB',
   'EXECUTION_TIME' => (round((microtime(true) - TIME) * 1000, 2)).' MS',
