@@ -37,7 +37,7 @@ CONFIG::$debug = false;
 # 5 = IPv6 + crawlers
 # 6 = IPv6 only
 # 7 = Crawlers only
-CONFIG::$forceSSL = 2;
+CONFIG::$forceSSL = false;
 
 /*** CRYPT Settings ***/
 
