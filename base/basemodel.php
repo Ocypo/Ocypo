@@ -149,8 +149,8 @@ abstract class BASEMODEL
     return $return;
   }
 
-  /** ldap extensios **/
-  public static function search($filter, $attributes = false)
+  /** ldap extentions **/
+  public static function search($filter, $attributes = false, $cleanFormat = true)
   {
     $db = self::get();
 
@@ -168,9 +168,32 @@ abstract class BASEMODEL
       else
         $search = ldap_search($db, $dn, $filter, $attributes);
       
-      return ldap_get_entries($db, $search);
+      $ldapResult = ldap_get_entries($db, $search);
+      if($cleanFormat)
+        $ldapResult = self::cleanFormat($ldapResult);
+      return $ldapResult;
     }
     else return ;
+  }
+  
+  private function cleanFormat($ldapResult)
+  {
+    $numRows = array_shift($ldapResult);
+    $return = array();
+    $row = 0;
+    
+    foreach($ldapResult as $result) {
+      
+      foreach($result as $key => $value) {
+        if(!is_integer($key) and $key != "count" and $key != "dn") {
+          $value = (isset($value[0]) && count($value) == 2) ? $value[0] : $value;
+          $return[$row][$key] = $value;
+        }
+      }
+      $row++;
+    }
+    
+    return $return;
   }
 }
 
