@@ -1,9 +1,14 @@
 <?php
 if(!defined('BASE')) die("Nope.avi");
 
-#DATABASE::add( DATABASENAME, array(DB_HOST, DB_USER, DB_PASS, DB_NAME [, DB_PORT]));
-#LDAP::add( LDAPNAME, array(LDAP_HOST, LDAP_USER, LDAP_PASS, LDAP_CN));
-#NOTE: DATABASENAME/LDAPNAME should be capital case!
+#Databases & LDAP is configured per dbtype: mysql, odbc, pgsql, sqlite, ldap (/!\ WIP /!\)
+#The port is always the last argument and is optional.
+#BASEMODEL::set( 'DATABASENAME' )->TYPE(DB_HOST, DB_USER, DB_PASS, DB_NAME [, DB_PORT]);
+#Example: BASEMODEL::set( 'db1' )->mysql("localhost", "root", "root", "my_datbase");
+#Example: BASEMODEL::set( 'db2' )->odbc("localhost", "my_database", 1337);
+#Example: BASEMODEL::set( 'db3' )->pgsql("localhost", "root", "root", "my_datbase");
+#Example: BASEMODEL::set( 'db4' )->sqlite("/path/to/database.sqlite");
+#Example: BASEMODEL::set( 'db5' )->ldap("localhost", "me@local.domain", "myPassword123", "DC=local,DC=domain");
 
 #ROUTE::add( FROM, TO );
 ROUTE::add('', 'home');
