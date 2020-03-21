@@ -64,8 +64,13 @@ class CONFIG
 
   public static function getBase($forceSSL = false)
   {
-    $port = ($_SERVER['SERVER_PORT'] != 80 && !(self::isSSL() == true && $_SERVER['SERVER_PORT'] == 443)) ? ":".$_SERVER['SERVER_PORT'] : '';
-    return ( (self::isSSL() || $forceSSL) ? 'https://' : 'http://') .$_SERVER['SERVER_NAME'].$port.substr($_SERVER["SCRIPT_NAME"], 0, -9);
+    if(php_sapi_name() === 'cli') {
+      return "CLI";
+    }
+    else {
+      $port = ($_SERVER['SERVER_PORT'] != 80 && !(self::isSSL() == true && $_SERVER['SERVER_PORT'] == 443)) ? ":".$_SERVER['SERVER_PORT'] : '';
+      return ( (self::isSSL() || $forceSSL) ? 'https://' : 'http://') .$_SERVER['SERVER_NAME'].$port.substr($_SERVER["SCRIPT_NAME"], 0, -9);
+    }
   }
 
   public static function getVersion()
