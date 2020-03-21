@@ -72,6 +72,6 @@ VIEW::$seperator = ' | ';
 #Default application language.
 LANG::setDefault('en');
 
-ERROR::$log = true;
-ERROR::$customPages = false; #Replace with controller name, functions are the error codes, eg, 'function __404($errorMessage){ echo "Custom 404 page"; }'.
-ERROR::$exclude = array(E_NOTICE, E_STRICT, E_DEPRECATED); #E_NOTICE, E_STRICT, E_DEPRECATED #Look at http://www.php.net/manual/en/errorfunc.constants.php for constants.
+ERR::$log = true;
+ERR::$customPages = false; #Replace with controller name, functions are the error codes, eg, 'function __404($errorMessage){ echo "Custom 404 page"; }'.
+ERR::$exclude = array(E_NOTICE, E_STRICT, E_DEPRECATED); #E_NOTICE, E_STRICT, E_DEPRECATED #Look at http://www.php.net/manual/en/errorfunc.constants.php for constants.

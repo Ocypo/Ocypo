@@ -15,7 +15,7 @@ class CONFIG
     define('PHP_VERSION_ID', ($version[0] * 10000 + $version[1] * 100 + $version[2]));
 
     if (PHP_VERSION_ID < 50300) {
-      ERROR::GENERATE(0, "PHP outdated...</br>In order to use this framework you must at least run PHP 5.3.0!");
+      ERR::GENERATE(0, "PHP outdated...</br>In order to use this framework you must at least run PHP 5.3.0!");
     }
   }
 

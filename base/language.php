@@ -18,7 +18,7 @@ class Lang
     if(file_exists('./language/'.$lang))
       return true;
     else
-      ERROR::generate(404, "Locale not found!");
+      ERR::generate(404, "Locale not found!");
   }
   
   public static function setLocale($language)
@@ -81,13 +81,13 @@ class Lang
           return include($_SERVER['DOCUMENT_ROOT'].$inc);
         }
         else
-          ERROR::generate(404, "Language file '".self::$lang."/".$exp[0]."' does not exist.");
+          ERR::generate(404, "Language file '".self::$lang."/".$exp[0]."' does not exist.");
       }
       else
-        ERROR::generate(404, "Could not find folder/file.");
+        ERR::generate(404, "Could not find folder/file.");
     }
     else
-      ERROR::generate(400, "(Default) Locale not set.");
+      ERR::generate(400, "(Default) Locale not set.");
     return false;
   }
   

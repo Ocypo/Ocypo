@@ -50,7 +50,7 @@ if(CONFIG::$obfuscateURLs && $class == "assets" && $function == "obfuscated")
   $file = 'assets/'.$asset;
 
   if(!CONFIG::$hotlinking && strpos($_SERVER['HTTP_REFERER'], BASE) === false) {
-    ERROR::generate(401, 'Hotlinking is not allowed!');
+    ERR::generate(401, 'Hotlinking is not allowed!');
   }
 
   #See if the file exists and if not throw an error.
@@ -58,7 +58,7 @@ if(CONFIG::$obfuscateURLs && $class == "assets" && $function == "obfuscated")
     $content = file_get_contents($file);
   }
   catch (Exception $e) {
-    ERROR::generate(404, 'File not found!');
+    ERR::generate(404, 'File not found!');
   }
 
   $mime_types = array(
@@ -133,12 +133,12 @@ elseif($class != "" && file_exists('./controllers/'.$class.'.php'))
     call_user_func_array(array($$class, 'index'), $args);
   }
   else
-    ERROR::generate(404, 'Function doesn\'t exist!');
+    ERR::generate(404, 'Function doesn\'t exist!');
 }
 elseif($class == "assets") {
-  ERROR::generate(404, 'File not found!');
+  ERR::generate(404, 'File not found!');
 }
 else {
-  ERROR::generate(404, 'Class "'.$class.'" doesn\'t exist!');
+  ERR::generate(404, 'Class "'.$class.'" doesn\'t exist!');
 }
 ?>

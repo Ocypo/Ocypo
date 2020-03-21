@@ -24,7 +24,7 @@ class VIEW
     }
     else
     {
-      ERROR::generate(404, "View '$view' does not exist!!!");
+      ERR::generate(404, "View '$view' does not exist!!!");
     }
   }
 

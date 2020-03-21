@@ -14,7 +14,7 @@ class CRYPT
   private static function getSalt()
   {
     if(self::$salt === false)
-      ERROR::generate(500, "No salt set, unable to encrypt/decrypt!");
+      ERR::generate(500, "No salt set, unable to encrypt/decrypt!");
 
     return self::$salt;
   }
@@ -22,20 +22,20 @@ class CRYPT
   public static function setSalt($str)
   {
     if(self::$salt !== false)
-      ERROR::generate(500, "You can only set the salt once!");
+      ERR::generate(500, "You can only set the salt once!");
     
     if(strlen($str) != 52)
-      ERROR::generate(500, "Salt must be 52 characters long!");
+      ERR::generate(500, "Salt must be 52 characters long!");
     
     //salt needs to be in hex...
     $salt = bin2hex(base64_decode($str));
     //make sure the salt is 32 bytes
     if(strlen($salt) < 68)
-      ERROR::generate(500, "Unknown salt error!");
+      ERR::generate(500, "Unknown salt error!");
     $salt = substr($salt, 2, 64);
     $salt = pack('H*', $salt);
     if(strlen($salt) != 32)
-      ERROR::generate(500, "Unknown salt error!");
+      ERR::generate(500, "Unknown salt error!");
 
     self::$salt = $salt;
   }

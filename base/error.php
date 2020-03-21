@@ -1,10 +1,10 @@
 <?php
 error_reporting(E_ALL);
-set_error_handler("error::errorHandler");
-set_exception_handler("error::exceptionHandler");
-register_shutdown_function("error::fatalHandler");
+set_error_handler("ERR::errorHandler");
+set_exception_handler("ERR::exceptionHandler");
+register_shutdown_function("ERR::fatalHandler");
 
-abstract class error
+abstract class ERR
 {
   /**
    * log(<string>)
@@ -248,7 +248,7 @@ if(!isset($first["args"][2]))
 }
   echo "<li>";
     echo 'File: '.$fileLocation.' ('.$fileLine.')<br/>';
-    echo '<b>'.$first["args"][1].'</b>';
+    echo '<b>'.(isset($first["args"]) && isset($first["args"][1]) ? $first["args"][1] : "").'</b>';
   echo "</li>";
 
 foreach($errorTrace as $trace)

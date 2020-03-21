@@ -14,7 +14,7 @@ abstract class BASEMODEL
   {
     $modelName = strtoupper($modelName);
     if(isset(self::$db[$modelName]) && $overWrite === false)
-      ERROR::GENERATE(500, "Database name already exists!");
+      ERR::GENERATE(500, "Database name already exists!");
 
     $model = new datamodel_instance($modelName);
     self::$db[$modelName] = $model;
@@ -28,7 +28,7 @@ abstract class BASEMODEL
       $var = $modelName;
     $var = strtoupper($var);
     if(!isset(self::$db[$var]))
-      ERROR::GENERATE(0, "DATAMODEL '$var' could not be located.<br />Has it been setup properly?" );
+      ERR::GENERATE(0, "DATAMODEL '$var' could not be located.<br />Has it been setup properly?" );
     elseif(!isset(self::$called[$var]))
     {
       $model = self::$db[$var];
@@ -50,13 +50,13 @@ abstract class BASEMODEL
             self::$called[$var] = $conn;
             break;
           default:
-            ERROR::GENERATE(0, "Unknown modeltype!");
+            ERR::GENERATE(0, "Unknown modeltype!");
             break;
         }
         CONFIG::debug("Opened new database: '$var'.");
       }
       catch (Exception $e) {
-        ERROR::GENERATE(0, "DATAMODEL '".$var."' Error (". $e->getMessage .")");
+        ERR::GENERATE(0, "DATAMODEL '".$var."' Error (". $e->getMessage .")");
       }
     }
     return self::$called[$var];
@@ -213,7 +213,7 @@ class datamodel_instance
   public function mysql($DB_HOST, $DB_USER = 'root', $DB_PASS = false, $DB_NAME = false, $DB_PORT = 3306)
   {
     if(!extension_loaded('PDO'))
-      ERROR::generate(400, "Cannot use PDO. PHP extension is not installed or enabled!");
+      ERR::generate(400, "Cannot use PDO. PHP extension is not installed or enabled!");
     $this->type = "PDO";
     $this->dsn = 'mysql:dbname='.$DB_NAME.";host=".$DB_HOST.";port=".$DB_PORT;
     $this->username = $DB_USER;
@@ -223,7 +223,7 @@ class datamodel_instance
   public function odbc($DB_HOST, $DB_NAME = false, $DB_PORT = 1433)
   {
     if(!extension_loaded('PDO'))
-      ERROR::generate(400, "Cannot use PDO. PHP extension is not installed or enabled!");
+      ERR::generate(400, "Cannot use PDO. PHP extension is not installed or enabled!");
     $this->type = "PDO";
     $this->dsn = 'odbc:DRIVER=FreeTDS;dbname='.$DB_NAME.";host=".$DB_HOST.";port=".$DB_PORT;
   }
@@ -231,7 +231,7 @@ class datamodel_instance
   public function pgsql($DB_HOST, $DB_USER = 'root', $DB_PASS = false, $DB_NAME = false, $DB_PORT = 5432)
   {
     if(!extension_loaded('PDO'))
-      ERROR::generate(400, "Cannot use PDO. PHP extension is not installed or enabled!");
+      ERR::generate(400, "Cannot use PDO. PHP extension is not installed or enabled!");
     $this->type = "PDO";
     $this->dsn = 'pgsql:dbname='.$DB_NAME.";host=".$DB_HOST.";port=".$DB_PORT;
     $this->username = $DB_USER;
@@ -241,9 +241,9 @@ class datamodel_instance
   public function sqlite($DB_NAME)
   {
     if(!extension_loaded('PDO'))
-      ERROR::generate(400, "Cannot use PDO. PHP extension is not installed or enabled!");
+      ERR::generate(400, "Cannot use PDO. PHP extension is not installed or enabled!");
     if(strpos($DB_NAME, '.db') === false)
-      ERROR::GENERATE(0, "SQLite3 database must have a proper name. (eg: database.db)");
+      ERR::GENERATE(0, "SQLite3 database must have a proper name. (eg: database.db)");
     $this->type = "PDO";
     $this->dsn = 'sqlite:'.$DB_NAME;
   }
@@ -251,7 +251,7 @@ class datamodel_instance
   public function ldap($LDAP_HOST, $LDAP_USER = false, $LDAP_PASS = false, $LDAP_DN = "", $LDAP_PORT = 389)
   {
     if(!function_exists('ldap_connect')) {
-      ERROR::GENERATE(400, "Cannot use LDAP, PHP extension is not installed or enabled!");
+      ERR::GENERATE(400, "Cannot use LDAP, PHP extension is not installed or enabled!");
     }
     $this->type = "LDAP";
     $this->dsn = "ldap://".$LDAP_HOST;
